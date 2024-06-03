@@ -41,6 +41,21 @@
             border: none;
             border-radius: 1.5rem;
             color: aliceblue;
+            border: 2px solid rgb(153, 40, 68);
+        }
+        .tododiv{
+            display: grid;
+            width: 18.2rem;
+            font-size: 1.4rem;
+            align-items: center;
+            margin-top: 2rem;
+            grid-template-columns: 1fr 0.3fr;
+            gap:1rem;
+        }
+        .btn:hover{
+            background-color: transparent;
+            color: rgb(153, 40, 68);
+            border: 2px solid rgb(153, 40, 68);
         }
     </style>
 </head>
@@ -58,38 +73,64 @@
         let itemcontainer=document.querySelector(".todoitems");
         let ipvalue=document.getElementById("inputvalue");
         let enterbtn=document.querySelector(".btn");
+        let todolistarr=[];
 
-        function deletelem()
+        function getTodoListFromLoc()
         {
-             innercontainer.remove
+           return JSON.parse(localStorage.getItem("todolist"));
         }
+
+        todolistarr=getTodoListFromLoc() || [];
 
         function addtodo()
         {
-            let pelem=document.createElement("span");
-            let belem=document.createElement("button");
-            belem.textContent="Delete";
-            belem.classList.add("btn");
-            pelem.innerText=ipvalue.value;
-            pelem.style.display="inline-block";
-            pelem.style.fontSize="1.4rem";
-            pelem.style.margin="0rem 10rem 0rem 0rem";
-            belem.style.margin="2rem 0rem 0rem 0rem";
-            let brelem=document.createElement("br");
-            itemcontainer.append(pelem);
-            itemcontainer.append(belem);
-            itemcontainer.append(brelem);
-
+           if(!(todolistarr.includes(ipvalue.value)) && ipvalue.value!="")
+           { 
+            let todovalue=ipvalue.value;
+            todolistarr.push(todovalue);
+            let settodolist=new Set(todolistarr);
+            let newarray=[...settodolist];
+            localStorage.setItem("todolist",JSON.stringify(newarray));
+            
+            let divelem=document.createElement("div");
+            divelem.innerHTML=`<li class="items">${ipvalue.value}</li> <button class="btn">Delete</button>`;
+            divelem.classList.add("tododiv");
+            itemcontainer.append(divelem);
+            ipvalue.value="";
+           }
+           else
+           {
+            ipvalue.value="";
+           }
         }
 
         enterbtn.addEventListener("click",()=>
     {
         addtodo();
     })
+       function showTodoList()
+       {
+           console.log(todolistarr);
 
-       belem.addEventListener("click",()=>{
-        deletelem();
-       })
+           todolistarr.forEach((ce)=>
+           {
+            let divelem=document.createElement("div");
+            divelem.innerHTML=`<li class="items">${ce}</li> <button class="btn">Delete</button>`;
+            divelem.classList.add("tododiv");
+            itemcontainer.append(divelem);
+           })
+       }
+       showTodoList();
+
+       function removetodoelem(event)
+       {
+            event.target.parentElement.remove();
+       }
+
+       itemcontainer.addEventListener("click",(event)=>
+    {
+          removetodoelem(event);
+    })
     </script>
 </body>
 </html>
