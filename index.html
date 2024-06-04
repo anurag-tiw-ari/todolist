@@ -89,11 +89,11 @@
             let todovalue=ipvalue.value;
             todolistarr.push(todovalue);
             let settodolist=new Set(todolistarr);
-            let newarray=[...settodolist];
-            localStorage.setItem("todolist",JSON.stringify(newarray));
+            todolistarr=[...settodolist];
+            localStorage.setItem("todolist",JSON.stringify(todolistarr));
             
             let divelem=document.createElement("div");
-            divelem.innerHTML=`<li class="items">${ipvalue.value}</li> <button class="btn">Delete</button>`;
+            divelem.innerHTML=`<li class="items">${ipvalue.value}</li> <button class="btn delbtn">Delete</button>`;
             divelem.classList.add("tododiv");
             itemcontainer.append(divelem);
             ipvalue.value="";
@@ -115,7 +115,7 @@
            todolistarr.forEach((ce)=>
            {
             let divelem=document.createElement("div");
-            divelem.innerHTML=`<li class="items">${ce}</li> <button class="btn">Delete</button>`;
+            divelem.innerHTML=`<li class="items">${ce}</li> <button class="btn delbtn">Delete</button>`;
             divelem.classList.add("tododiv");
             itemcontainer.append(divelem);
            })
@@ -125,11 +125,21 @@
        function removetodoelem(event)
        {
             event.target.parentElement.remove();
+            let delvalueelem=event.target.previousElementSibling;
+            console.log(delvalueelem);
+            let delvalue=delvalueelem.textContent;
+            console.log(delvalue);
+            let delind=todolistarr.indexOf(delvalue);
+            console.log(delind);
+            todolistarr.splice(delind,1);
+            localStorage.setItem("todolist",JSON.stringify(todolistarr));
        }
 
        itemcontainer.addEventListener("click",(event)=>
     {
-          removetodoelem(event);
+        if(event.target.classList.contains("delbtn"))
+        {  removetodoelem(event);
+        }
     })
     </script>
 </body>
